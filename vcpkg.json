@@ -1,0 +1,7 @@
+{
+  "dependencies": [
+    "xxhash",
+    "boost-asio",
+    "boost-beast"
+  ]
+}

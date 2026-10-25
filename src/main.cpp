@@ -3,6 +3,7 @@
 #include <thread_pool.hpp>
 #include <string>
 #include <iostream>
+#include <chrono>
 
 int main() {
     ThreadPool pool(4);
