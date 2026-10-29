@@ -1,6 +1,3 @@
-[submodule "src/xxHash"]
-	path = src/xxHash
-	url = https://github.com/Cyan4973/xxHash.git
 [submodule "vcpkg"]
 	path = vcpkg
-	url = https://github.com/microsoft/vcpkg.git
+	url = https://github.com/microsoft/vcpkg
