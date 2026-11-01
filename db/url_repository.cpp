@@ -14,7 +14,7 @@ std::optional <UrlRecord> UrlRepository::create(const std::string& original_url,
         );
 
         if (res.empty()) {
-            txn.abort(); 
+            txn.abort();
             return std::nullopt; 
         }
 

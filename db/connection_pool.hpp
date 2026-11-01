@@ -12,15 +12,11 @@ public:
     ~ConnectionPool();
     
     class ConnectionProxy {
-        public:
+    public:
         ConnectionProxy(std::shared_ptr<pqxx::connection> conn, ConnectionPool& pool)
         : conn(std::move(conn)), pool(pool) {}
 
-        ~ConnectionProxy() {
-            if (conn) {
-                pool.returnConnection(std::move(conn));
-            }
-        }
+        ~ConnectionProxy();
         
         ConnectionProxy(const ConnectionProxy&) = delete;
         ConnectionProxy& operator=(const ConnectionProxy&) = delete;
@@ -31,7 +27,7 @@ public:
         pqxx::connection& operator*() { return *conn; }
         pqxx::connection* operator->() { return conn.get(); }
 
-        private:
+    private:
         std::shared_ptr <pqxx::connection> conn;
         ConnectionPool& pool;
     };
@@ -39,7 +35,6 @@ public:
     ConnectionProxy acquire();
     
 private:
-
     friend class ConnectionProxy;
     void returnConnection(std::shared_ptr<pqxx::connection> conn);
 

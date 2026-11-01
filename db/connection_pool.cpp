@@ -1,5 +1,7 @@
 #include "connection_pool.hpp"
 #include <stdexcept>
+
+
 ConnectionPool::ConnectionPool (const std::string& conn_str, size_t pool_size) : conn_str(conn_str), pool_size(pool_size) {
     for (size_t i = 0; i < pool_size; i++) {
         auto conn = std::make_shared <pqxx::connection>(conn_str);
@@ -62,5 +64,11 @@ void ConnectionPool::prepareStatements(pqxx::connection& conn) {
 
     conn.prepare("get_url_details",
         "SELECT id, original_url, short_key"
-        "FROM urls WHERE short_key = $1;");
+        " FROM urls WHERE short_key = $1;");
+}
+
+ConnectionPool::ConnectionProxy::~ConnectionProxy() {
+    if (conn) {
+        pool.returnConnection(std::move(conn));
+    }
 }
