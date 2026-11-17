@@ -32,7 +32,7 @@ target_link_libraries(UrlRepository PUBLIC ConnectionPool libpqxx::pqxx)
 
 add_library(HTTPServer STATIC network/http_server.cpp)
 target_include_directories(HTTPServer PUBLIC network)
-target_link_libraries(HTTPServer PUBLIC ThreadPool UrlRepository Boost::asio Boost::beast)
+target_link_libraries(HTTPServer PUBLIC ThreadPool UrlRepository Boost::asio Boost::beast hash base62)
 
 target_link_libraries(main 
     PRIVATE 
