@@ -9,9 +9,7 @@
 #include <future>
 
 int main() {
-    std::string conn_str = "dbname=db user=myuser password=mypassword host=127.0.0.1 port=5432";
-    std::vector <std::string> vec = {"1", "fdgfdsfd", "343498gr", "bgiwoesrbg", "srfdrgs", "98hw948hto", "sgbljsd", "94830hq9", "d "};
-    std::vector <std::future<std::optional<UrlRecord>>>fres;
+    std::string conn_str = "dbname=db user=myuser password=mypassword host=db port=5432";
     try {
         ConnectionPool cpool(conn_str, 4);
         UrlRepository repo(cpool);
