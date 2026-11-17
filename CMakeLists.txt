@@ -12,15 +12,15 @@ find_package(xxHash 0.8 CONFIG REQUIRED)
 
 add_executable(main src/main.cpp)
 
-add_library(hash STATIC src/hash.cpp)
-target_include_directories(hash PUBLIC include)
+add_library(hash STATIC business-logic/hash.cpp)
+target_include_directories(hash PUBLIC business-logic)
 target_link_libraries(hash PUBLIC xxHash::xxhash)
 
-add_library(base62 STATIC src/base62.cpp)
-target_include_directories(base62 PUBLIC include)
+add_library(base62 STATIC business-logic/base62.cpp)
+target_include_directories(base62 PUBLIC business-logic)
 
-add_library(ThreadPool STATIC src/thread_pool.cpp)
-target_include_directories(ThreadPool PUBLIC include)
+add_library(ThreadPool STATIC thread-pool/thread_pool.cpp)
+target_include_directories(ThreadPool PUBLIC thread-pool)
 
 add_library(ConnectionPool STATIC db/connection_pool.cpp)
 target_include_directories(ConnectionPool PUBLIC db)
