@@ -2,28 +2,44 @@ cmake_minimum_required(VERSION 3.15)
 
 project(url-shortener)
 
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
+
 find_package(boost_asio CONFIG REQUIRED)
-
+find_package(boost_beast CONFIG REQUIRED)
 find_package(libpqxx CONFIG REQUIRED)
-
 find_package(xxHash 0.8 CONFIG REQUIRED)
 
 add_executable(main src/main.cpp)
 
-add_library(hash STATIC src/hash.cpp)
-add_library(base62 STATIC src/base62.cpp)
-add_library(ThreadPool STATIC src/thread_pool.cpp)
+add_library(hash STATIC business-logic/hash.cpp)
+target_include_directories(hash PUBLIC business-logic)
+target_link_libraries(hash PUBLIC xxHash::xxhash)
 
-target_include_directories(hash PUBLIC include)
-target_include_directories(base62 PUBLIC include)
-target_include_directories(ThreadPool PUBLIC include)
+add_library(base62 STATIC business-logic/base62.cpp)
+target_include_directories(base62 PUBLIC business-logic)
+
+add_library(ThreadPool STATIC thread-pool/thread_pool.cpp)
+target_include_directories(ThreadPool PUBLIC thread-pool)
+
+add_library(ConnectionPool STATIC db/connection_pool.cpp)
+target_include_directories(ConnectionPool PUBLIC db)
+target_link_libraries(ConnectionPool PUBLIC libpqxx::pqxx)
+
+add_library(UrlRepository STATIC db/url_repository.cpp)
+target_include_directories(UrlRepository PUBLIC db)
+target_link_libraries(UrlRepository PUBLIC ConnectionPool libpqxx::pqxx)
+
+add_library(HTTPServer STATIC network/http_server.cpp)
+target_include_directories(HTTPServer PUBLIC network)
+target_link_libraries(HTTPServer PUBLIC ThreadPool UrlRepository Boost::asio Boost::beast hash base62)
 
 target_link_libraries(main 
     PRIVATE 
         hash 
         base62 
-        ThreadPool 
-        Boost::asio
-        libpqxx::pqxx
-        xxHash::xxhash
+        ThreadPool
+        ConnectionPool
+        UrlRepository
+        HTTPServer
 )

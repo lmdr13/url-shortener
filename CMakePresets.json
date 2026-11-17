@@ -4,7 +4,7 @@
         {
             "name": "Configure preset using toolchain file",
             "displayName": "Configure preset using toolchain file",
-            "generator": "MinGW Makefiles",
+            "generator": "Ninja",
             "binaryDir": "${sourceDir}/build",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Debug",

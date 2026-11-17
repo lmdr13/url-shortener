@@ -18,7 +18,7 @@ public:
     template <typename F, typename... Args>
     auto enqueue (F&& f, Args&&... args) -> std::future<typename std::invoke_result<F, Args...>::type>;
 
-    private:
+private:
     std::vector <std::thread> threads;
     std::condition_variable cv;
     std::mutex mtx;

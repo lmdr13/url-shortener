@@ -1,27 +1,27 @@
-#include <hash.hpp>
-#include <base62.hpp>
-#include <thread_pool.hpp>
-#include <string>
 #include <iostream>
-#include <chrono>
+#include "url_repository.hpp"
+#include "connection_pool.hpp"
+#include "hash.hpp"
+#include "base62.hpp"
+#include "thread_pool.hpp"
+#include "http_server.hpp"
+#include <vector>
+#include <future>
 
 int main() {
-    ThreadPool pool(4);
-    std::vector <std::string> vec = {"qwe", "bgoeh", "jkqn", "goadffv", "3453", "fddlk", "dsghtiubg"};
-    std::vector <std::future<std::string>> fres;
-    std::vector <std::string> res;
-    for (auto& s : vec) {
-        fres.emplace_back(
-            pool.enqueue([s] {
-                return encode::to_base62(hash::hash(s));
-            })
-        );
-    }
+    std::string conn_str = "dbname=db user=myuser password=mypassword host=db port=5432";
+    try {
+        ConnectionPool cpool(conn_str, 4);
+        UrlRepository repo(cpool);
+        boost::asio::io_context ioc;
+        
+        HTTPServer server(ioc, 8080, repo, 4);
+        server.start();
 
-    for (auto&& f : fres) {
-        res.push_back(f.get());
-    }
-    for (std::string s : res) {
-        std::cout << s << '\n';
+        std::cout << "Server started on port 8080 with 4 worker threads...\n";
+        
+        ioc.run();
+    }catch(const std::exception& e) {
+        std::cerr << e.what();
     }
 }
