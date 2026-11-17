@@ -32,8 +32,9 @@ RUN ./vcpkg/vcpkg install
 
 COPY CMakeLists.txt CMakePresets.json ./
 COPY src ./src
-COPY include ./include
+COPY business-logic ./business-logic
 COPY db ./db
+COPY thread-pool ./thread-pool
 COPY network ./network
 
 RUN cmake --preset "Configure preset using toolchain file" -DCMAKE_BUILD_TYPE=Release && \
