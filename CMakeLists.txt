@@ -6,6 +6,7 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 find_package(boost_asio CONFIG REQUIRED)
+find_package(boost_beast CONFIG REQUIRED)
 find_package(libpqxx CONFIG REQUIRED)
 find_package(xxHash 0.8 CONFIG REQUIRED)
 
@@ -29,6 +30,10 @@ add_library(UrlRepository STATIC db/url_repository.cpp)
 target_include_directories(UrlRepository PUBLIC db)
 target_link_libraries(UrlRepository PUBLIC ConnectionPool libpqxx::pqxx)
 
+add_library(HTTPServer STATIC network/http_server.cpp)
+target_include_directories(HTTPServer PUBLIC network)
+target_link_libraries(HTTPServer PUBLIC ThreadPool UrlRepository Boost::asio Boost::beast)
+
 target_link_libraries(main 
     PRIVATE 
         hash 
@@ -36,4 +41,5 @@ target_link_libraries(main
         ThreadPool
         ConnectionPool
         UrlRepository
+        HTTPServer
 )
